@@ -212,6 +212,24 @@ function hydratePaymentUI() {
   }
 }
 
+function clearMembers() {
+  // Clear array (if you're storing members)
+  members = [];
+
+  // Clear UI
+  document.getElementById("membersList").innerHTML = "";
+
+  // Clear dropdown (payer select)
+  document.getElementById("payer").innerHTML = "";
+
+  // Update dashboard count
+  document.getElementById("membersCount").innerText = 0;
+  document.getElementById("metricMembers").innerText = 0;
+
+  // Optional: clear localStorage if used
+  localStorage.removeItem("members");
+}
+
 function savePaymentDetails() {
   const nameEl = document.getElementById("contactName");
   const upiEl = document.getElementById("contactUpi");

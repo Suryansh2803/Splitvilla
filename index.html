@@ -130,12 +130,17 @@
 
 <!-- MEMBERS -->
 <div id="members" class="card section">
-<h2>Members</h2>
-<input id="name" placeholder="Name">
-<input id="photo" placeholder="Photo URL">
-<button onclick="addMember()">Add</button>
-<div id="membersList"></div>
-</div>
+  <h2>Members</h2>
+  <input id="name" placeholder="Name">
+  <input id="photo" placeholder="Photo URL">
+  
+  <div class="member-actions">
+    <button onclick="addMember()">Add</button>
+    <button class="btn-secondary" onclick="clearMembers()">Clear All</button>
+  </div>
+  
+  <div id="membersList"></div>
+  </div>
 
 <!-- EXPENSE -->
 <div id="expenses" class="card section">
