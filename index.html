@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Splitvilla</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.74/build/spline-viewer.js"></script>
+</head>
+
+<body class="landing-mode">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>Splitvilla</h2>
+  <button onclick="show('landing')">Home</button>
+  <button onclick="show('dashboard')">Dashboard</button>
+  <button onclick="show('members')">Members</button>
+  <button onclick="show('expenses')">Expenses</button>
+  <button onclick="goToAnalytics()">Analytics</button>
+  <button onclick="show('chat')">Team Chat</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<div class="navbar">
+  <div class="navbar-brand">
+    <img
+      src="image.png"
+      alt="Splitvilla logo"
+      class="navbar-logo"
+    />
+    <div class="brand-text">
+      <h2>Splitvilla</h2>
+      <small>Smart Expense Manager</small>
+    </div>
+  </div>
+  <div class="navbar-actions">
+    <span id="pageLabel">Home</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- LANDING -->
+<div id="landing" class="section active">
+  <div class="landing-hero">
+    <div class="landing-hero-inner">
+      <div class="landing-hero-copy">
+        <div class="landing-badge">Modern Expense Splitter</div>
+        <h1>Split smarter. Settle faster.</h1>
+        <p>
+          Splitvilla helps your team track expenses, see who paid what, and get clean summaries—without any hassle.
+        </p>
+
+        <div class="landing-cta">
+          <button class="btn-primary" onclick="show('dashboard')">Get Started</button>
+        </div>
+
+        <div class="landing-metrics">
+          <div class="metric">
+            <div class="metric-value" id="metricTotal">₹0</div>
+            <div class="metric-label">Total Spent</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value" id="metricMembers">0</div>
+            <div class="metric-label">Members</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value">Fast</div>
+            <div class="metric-label">Simple flow</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="landing-hero-spline">
+        <spline-viewer
+          url="https://prod.spline.design/MldxpxpzEubF4rKe/scene.splinecode"
+          title="Interactive 3D scene"
+        ></spline-viewer>
+      </div>
+    </div>
+  </div>
+
+  <div class="landing-features">
+    <div class="card landing-card">
+      <h2>Real-time totals</h2>
+      <p>Every expense updates your dashboard instantly.</p>
+    </div>
+    <div class="card landing-card">
+      <h2>Clear breakdown</h2>
+      <p>Analytics show who paid what, in a single view.</p>
+    </div>
+    <div class="card landing-card">
+      <h2>Team communication</h2>
+      <p>Keep everything in one place with quick team chat.</p>
+    </div>
+  </div>
+
+  <div class="landing-bottom">
+    <div class="landing-bottom-card">
+      <h2>Ready to split your next bill?</h2>
+      <p>Start by adding your members, then record expenses.</p>
+      <div class="landing-cta">
+        <button class="btn-primary" onclick="show('expenses')">Add an Expense</button>
+        <button class="btn-secondary" onclick="goToAnalytics()">View Analytics</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="section">
+<div class="stats">
+  <div class="stat">
+    <h3 id="total">₹0</h3>
+    <p>Total Spent</p>
+  </div>
+  <div class="stat">
+    <h3 id="membersCount">0</h3>
+    <p>Members</p>
+  </div>
+</div>
+</div>
+
+<!-- MEMBERS -->
+<div id="members" class="card section">
+<h2>Members</h2>
+<input id="name" placeholder="Name">
+<input id="photo" placeholder="Photo URL">
+<button onclick="addMember()">Add</button>
+<div id="membersList"></div>
+</div>
+
+<!-- EXPENSE -->
+<div id="expenses" class="card section">
+<h2>Add Expense</h2>
+<input id="desc" placeholder="Description">
+<input type="number" id="amt" placeholder="Amount">
+<select id="payer"></select>
+<button onclick="addExpense()">Add</button>
+<ul id="expList"></ul>
+</div>
+
+<!-- CHAT -->
+<div id="chat" class="card section">
+<h2>Team Chat</h2>
+<div id="chatBox"></div>
+<input id="msg">
+<button onclick="sendMsg()">Send</button>
+</div>
+
+</div>
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>

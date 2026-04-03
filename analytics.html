@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Splitvilla Analytics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="main analytics-main">
+    <div class="navbar">
+      <div class="navbar-brand">
+        <img
+          src="image.png"
+          alt="Splitvilla logo"
+          class="navbar-logo"
+        />
+        <div class="brand-text">
+          <strong>Splitvilla Analytics</strong>
+          <small>Insights Dashboard</small>
+        </div>
+      </div>
+      <div class="navbar-actions">
+        <span>Overview</span>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="card" id="analyticsContainer">
+        <h2>Who paid what</h2>
+        <p class="analytics-copy">
+          This view shows the total amount paid by each member based on your saved Splitvilla data.
+        </p>
+        <div class="analytics-chart-wrap">
+          <canvas id="chart"></canvas>
+        </div>
+        <p id="emptyState" class="analytics-empty">
+          No data found yet. Go back to Splitvilla, add members and expenses, then return here.
+        </p>
+      </div>
+
+      <button onclick="goBack()" class="analytics-back-btn">
+        ← Back to Splitvilla
+      </button>
+    </div>
+  </div>
+
+  <script src="analytics.js"></script>
+</body>
+</html>
+
