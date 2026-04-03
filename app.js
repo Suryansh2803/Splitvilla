@@ -227,7 +227,7 @@ function clearMembers() {
   document.getElementById("metricMembers").innerText = 0;
 
   // Optional: clear localStorage if used
-  localStorage.removeItem("members");
+  localStorage.removeItem("splitvillaState");
 }
 
 function savePaymentDetails() {
