@@ -393,6 +393,59 @@ li span {
   font-weight: 500;
 }
 
+/* EXPENSE ITEM ACTIONS */
+.expense-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.expense-left {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.expense-item-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.expense-mini-btn {
+  width: auto;
+  padding: 7px 10px;
+  margin: 0;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: rgba(134, 239, 172, 0.14);
+  color: #dcfce7;
+  border: 1px solid rgba(134, 239, 172, 0.35);
+  box-shadow: none;
+}
+
+.expense-mini-btn:hover {
+  background: rgba(134, 239, 172, 0.2);
+  transform: none;
+  box-shadow: none;
+  filter: none;
+}
+
+.expense-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.expense-actions button {
+  width: auto;
+  min-width: 150px;
+}
+
 /* CHAT */
 #chatBox {
   max-height: 220px;

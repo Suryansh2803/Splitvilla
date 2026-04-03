@@ -1,5 +1,6 @@
 let members = [];
 let expenses = [];
+let editingExpenseIndex = null;
 let payment = {
   accountName: "",
   upiId: "",
@@ -72,11 +73,7 @@ function loadState() {
       payerSelect.appendChild(opt);
     });
 
-    expenses.forEach((e) => {
-      const li = document.createElement("li");
-      li.innerText = `${e.payer} paid ₹${e.amt} for ${e.desc}`;
-      expList.appendChild(li);
-    });
+    renderExpenses();
 
     document.getElementById("membersCount").innerText = members.length;
     const metricMembers = document.getElementById("metricMembers");
@@ -89,6 +86,77 @@ function loadState() {
   } catch (e) {
     console.error("Failed to load state", e);
   }
+}
+
+function renderExpenses() {
+  const expList = document.getElementById("expList");
+  if (!expList) return;
+  expList.innerHTML = "";
+
+  expenses.forEach((e, idx) => {
+    const li = document.createElement("li");
+    li.className = "expense-item";
+
+    const left = document.createElement("div");
+    left.className = "expense-left";
+    left.innerText = `${e.payer} paid ₹${e.amt} for ${e.desc}`;
+
+    const actions = document.createElement("div");
+    actions.className = "expense-item-actions";
+
+    const editBtn = document.createElement("button");
+    editBtn.className = "expense-mini-btn";
+    editBtn.type = "button";
+    editBtn.innerText = "Edit";
+    editBtn.addEventListener("click", () => startEditExpense(idx));
+
+    actions.appendChild(editBtn);
+    li.appendChild(left);
+    li.appendChild(actions);
+    expList.appendChild(li);
+  });
+}
+
+function startEditExpense(index) {
+  const e = expenses[index];
+  if (!e) return;
+  editingExpenseIndex = index;
+
+  const descEl = document.getElementById("desc");
+  const amtEl = document.getElementById("amt");
+  const payerEl = document.getElementById("payer");
+  if (descEl) descEl.value = e.desc || "";
+  if (amtEl) amtEl.value = Number(e.amt) || 0;
+  if (payerEl) payerEl.value = e.payer || "";
+
+  const submit = document.getElementById("expenseSubmit");
+  const cancel = document.getElementById("expenseCancel");
+  if (submit) submit.innerText = "Save";
+  if (cancel) cancel.style.display = "inline-flex";
+}
+
+function cancelEditExpense() {
+  editingExpenseIndex = null;
+  const descEl = document.getElementById("desc");
+  const amtEl = document.getElementById("amt");
+  if (descEl) descEl.value = "";
+  if (amtEl) amtEl.value = "";
+
+  const submit = document.getElementById("expenseSubmit");
+  const cancel = document.getElementById("expenseCancel");
+  if (submit) submit.innerText = "Add";
+  if (cancel) cancel.style.display = "none";
+}
+
+function clearExpenses() {
+  if (!expenses.length) return;
+  const ok = window.confirm("Clear all expenses? This cannot be undone.");
+  if (!ok) return;
+  expenses = [];
+  cancelEditExpense();
+  renderExpenses();
+  updateDashboard();
+  saveState();
 }
 
 function show(id) {
@@ -188,11 +256,14 @@ function addExpense() {
   const amt = Number(document.getElementById("amt").value);
   const payer = document.getElementById("payer").value;
 
-  expenses.push({ desc, amt, payer });
+  if (editingExpenseIndex !== null && expenses[editingExpenseIndex]) {
+    expenses[editingExpenseIndex] = { desc, amt, payer };
+    cancelEditExpense();
+  } else {
+    expenses.push({ desc, amt, payer });
+  }
 
-  const li = document.createElement("li");
-  li.innerText = `${payer} paid ₹${amt} for ${desc}`;
-  document.getElementById("expList").appendChild(li);
+  renderExpenses();
 
   updateDashboard();
   saveState();

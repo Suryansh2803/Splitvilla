@@ -143,7 +143,11 @@
 <input id="desc" placeholder="Description">
 <input type="number" id="amt" placeholder="Amount">
 <select id="payer"></select>
-<button onclick="addExpense()">Add</button>
+<div class="expense-actions">
+  <button id="expenseSubmit" onclick="addExpense()">Add</button>
+  <button id="expenseCancel" class="btn-secondary" onclick="cancelEditExpense()" style="display:none;">Cancel edit</button>
+  <button class="btn-secondary" onclick="clearExpenses()">Clear all</button>
+</div>
 <ul id="expList"></ul>
 </div>
 
