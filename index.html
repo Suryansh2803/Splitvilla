@@ -22,6 +22,7 @@
   <button onclick="show('expenses')">Expenses</button>
   <button onclick="goToAnalytics()">Analytics</button>
   <button onclick="show('chat')">Team Chat</button>
+  <button onclick="show('contact')">Contact</button>
 </div>
 
 <!-- MAIN -->
@@ -152,6 +153,41 @@
 <div id="chatBox"></div>
 <input id="msg">
 <button onclick="sendMsg()">Send</button>
+</div>
+
+<!-- CONTACT -->
+<div id="contact" class="card section">
+  <h2>Contact / Payment</h2>
+  <p class="helper-text">
+    Add your payment details here. The QR/scanner image is saved only in this browser (localStorage).
+  </p>
+
+  <div class="contact-grid">
+    <div class="contact-field">
+      <label for="contactName">Account / Name</label>
+      <input id="contactName" placeholder="e.g. Jai Thawal">
+    </div>
+    <div class="contact-field">
+      <label for="contactUpi">UPI ID</label>
+      <input id="contactUpi" placeholder="e.g. name@bank">
+    </div>
+  </div>
+
+  <div class="contact-actions">
+    <button onclick="savePaymentDetails()">Save details</button>
+    <button class="btn-secondary" onclick="copyUpi()">Copy UPI</button>
+  </div>
+
+  <div class="contact-qr">
+    <div class="contact-field">
+      <label for="qrUpload">Upload QR / Scanner image</label>
+      <input id="qrUpload" type="file" accept="image/*">
+    </div>
+    <div class="qr-preview-wrap">
+      <div id="qrEmpty" class="qr-empty">No QR uploaded yet.</div>
+      <img id="qrPreview" alt="UPI QR preview" />
+    </div>
+  </div>
 </div>
 
 </div>

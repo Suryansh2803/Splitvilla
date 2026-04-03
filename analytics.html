@@ -25,12 +25,19 @@
         </div>
       </div>
       <div class="navbar-actions">
-        <span>Overview</span>
+        <div class="analytics-tabs" role="tablist" aria-label="Analytics tabs">
+          <button id="tabOverview" class="analytics-tab active" onclick="switchTab('overview')" role="tab" aria-selected="true">
+            Overview
+          </button>
+          <button id="tabResults" class="analytics-tab" onclick="switchTab('results')" role="tab" aria-selected="false">
+            Results
+          </button>
+        </div>
       </div>
     </div>
 
     <div class="container">
-      <div class="card" id="analyticsContainer">
+      <div class="card analytics-view" id="viewOverview">
         <h2>Who paid what</h2>
         <p class="analytics-copy">
           This view shows the total amount paid by each member based on your saved Splitvilla data.
@@ -43,8 +50,30 @@
         </p>
       </div>
 
+      <div class="card analytics-view" id="viewResults" style="display:none;">
+        <h2>Settlement results</h2>
+        <p class="analytics-copy">
+          Equal split across members. Below is a minimal set of transfers to settle up.
+        </p>
+
+        <div class="results-grid">
+          <div>
+            <h3 class="results-title">Net balances</h3>
+            <div id="netList" class="results-list"></div>
+          </div>
+          <div>
+            <h3 class="results-title">Minimal transfers</h3>
+            <div id="transferList" class="results-list"></div>
+          </div>
+        </div>
+
+        <p id="resultsEmpty" class="analytics-empty">
+          No data found yet. Add members and expenses in Splitvilla first.
+        </p>
+      </div>
+
       <button onclick="goBack()" class="analytics-back-btn">
-        ← Back to Splitvilla
+        ← Back to Dashboard
       </button>
     </div>
   </div>

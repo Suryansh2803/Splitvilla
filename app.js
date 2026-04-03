@@ -1,12 +1,18 @@
 let members = [];
 let expenses = [];
+let payment = {
+  accountName: "",
+  upiId: "",
+  qrDataUrl: ""
+};
 
 const pageTitles = {
   landing: "Home",
   dashboard: "Dashboard",
   members: "Members",
   expenses: "Expenses",
-  chat: "Team Chat"
+  chat: "Team Chat",
+  contact: "Contact"
 };
 
 function setPageLabel(id) {
@@ -17,19 +23,35 @@ function setPageLabel(id) {
 
 function saveState() {
   try {
-    localStorage.setItem("splitvillaState", JSON.stringify({ members, expenses }));
+    localStorage.setItem("splitvillaState", JSON.stringify({ members, expenses, payment }));
   } catch (e) {
     console.error("Failed to save state", e);
+  }
+}
+
+function applyHashRoute() {
+  const hash = (window.location.hash || "").replace("#", "").trim();
+  const sectionIds = ["landing", "dashboard", "members", "expenses", "chat", "contact"];
+  if (sectionIds.includes(hash)) {
+    show(hash);
   }
 }
 
 function loadState() {
   try {
     const raw = localStorage.getItem("splitvillaState");
-    if (!raw) return;
-    const data = JSON.parse(raw);
-    members = Array.isArray(data.members) ? data.members : [];
-    expenses = Array.isArray(data.expenses) ? data.expenses : [];
+    if (raw) {
+      const data = JSON.parse(raw);
+      members = Array.isArray(data.members) ? data.members : [];
+      expenses = Array.isArray(data.expenses) ? data.expenses : [];
+      payment = data && typeof data.payment === "object" && data.payment
+        ? {
+            accountName: String(data.payment.accountName || ""),
+            upiId: String(data.payment.upiId || ""),
+            qrDataUrl: String(data.payment.qrDataUrl || "")
+          }
+        : payment;
+    }
 
     const membersList = document.getElementById("membersList");
     const payerSelect = document.getElementById("payer");
@@ -61,6 +83,9 @@ function loadState() {
     if (metricMembers) metricMembers.innerText = members.length;
 
     updateDashboard();
+
+    hydratePaymentUI();
+    applyHashRoute();
   } catch (e) {
     console.error("Failed to load state", e);
   }
@@ -72,10 +97,69 @@ function show(id) {
 
   document.body.classList.toggle("landing-mode", id === "landing");
   setPageLabel(id);
+
+  if (window.location.hash !== "#" + id) {
+    window.location.hash = id;
+  }
 }
 
 function goToAnalytics() {
   window.location.href = "analytics.html";
+}
+
+function hydratePaymentUI() {
+  const nameEl = document.getElementById("contactName");
+  const upiEl = document.getElementById("contactUpi");
+  const qrPreview = document.getElementById("qrPreview");
+  const qrEmpty = document.getElementById("qrEmpty");
+  const qrUpload = document.getElementById("qrUpload");
+
+  if (nameEl) nameEl.value = payment.accountName || "";
+  if (upiEl) upiEl.value = payment.upiId || "";
+
+  if (qrPreview && qrEmpty) {
+    const hasQr = Boolean(payment.qrDataUrl);
+    qrPreview.style.display = hasQr ? "block" : "none";
+    qrEmpty.style.display = hasQr ? "none" : "block";
+    if (hasQr) qrPreview.src = payment.qrDataUrl;
+  }
+
+  if (qrUpload && !qrUpload.dataset.bound) {
+    qrUpload.dataset.bound = "true";
+    qrUpload.addEventListener("change", async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      const dataUrl = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ""));
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
+      payment.qrDataUrl = dataUrl;
+      saveState();
+      hydratePaymentUI();
+    });
+  }
+}
+
+function savePaymentDetails() {
+  const nameEl = document.getElementById("contactName");
+  const upiEl = document.getElementById("contactUpi");
+  payment.accountName = nameEl ? String(nameEl.value || "").trim() : payment.accountName;
+  payment.upiId = upiEl ? String(upiEl.value || "").trim() : payment.upiId;
+  saveState();
+}
+
+async function copyUpi() {
+  const upi = String((payment && payment.upiId) || "").trim();
+  if (!upi) return;
+  try {
+    await navigator.clipboard.writeText(upi);
+  } catch (e) {
+    console.error("Failed to copy UPI", e);
+  }
 }
 
 function addMember() {
@@ -129,3 +213,5 @@ function sendMsg() {
 }
 
 document.addEventListener("DOMContentLoaded", loadState);
+
+window.addEventListener("hashchange", applyHashRoute);
