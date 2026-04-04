@@ -40,6 +40,11 @@ function applyHashRoute() {
 
 function loadState() {
   try {
+    const navTiming = performance.getEntriesByType("navigation")[0];
+    if (navTiming && navTiming.type === "reload") {
+      localStorage.removeItem("splitvillaState");
+    }
+
     const raw = localStorage.getItem("splitvillaState");
     if (raw) {
       const data = JSON.parse(raw);

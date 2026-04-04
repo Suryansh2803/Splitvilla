@@ -43,6 +43,7 @@ body {
   gap: 24px;
   box-shadow: 12px 0 40px rgba(15, 23, 42, 0.8);
   backdrop-filter: blur(18px);
+  overflow-y: auto;
 }
 
 .sidebar h2 {
@@ -554,10 +555,24 @@ li span {
   margin-bottom: 10px;
 }
 
-.results-list {
+.results-list, #membersList, #expList {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.results-list::-webkit-scrollbar, #membersList::-webkit-scrollbar, #expList::-webkit-scrollbar {
+  width: 6px;
+}
+.results-list::-webkit-scrollbar-track, #membersList::-webkit-scrollbar-track, #expList::-webkit-scrollbar-track {
+  background: transparent;
+}
+.results-list::-webkit-scrollbar-thumb, #membersList::-webkit-scrollbar-thumb, #expList::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 999px;
 }
 
 .results-meta {

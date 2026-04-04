@@ -1,4 +1,11 @@
 let chart;
+let settlementTextForWA = "";
+
+function shareOnWhatsApp() {
+  if (!settlementTextForWA) return;
+  const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(settlementTextForWA)}`;
+  window.open(url, '_blank');
+}
 
 function goBack() {
   window.location.href = "index.html#dashboard";
@@ -83,12 +90,18 @@ function renderResults(members, expenses) {
   netList.innerHTML = "";
   transferList.innerHTML = "";
 
+  const waBtn = document.getElementById("waShareBtn");
+  if (waBtn) waBtn.style.display = "none";
+  settlementTextForWA = "";
+
   const { total, share, paidMap, netMap, transfers } = computeSettlement(members, expenses);
   const names = Object.keys(netMap);
   if (names.length === 0 || total <= 0) {
     showResultsEmptyState();
     return;
   }
+
+  let waText = `*Splitvilla Settlement*\n\n*Total Spent:* ${formatInr(total)}\n*Share per person:* ${formatInr(share)}\n\n*Net Balances:*\n`;
 
   const header = document.createElement("div");
   header.className = "results-meta";
@@ -108,6 +121,7 @@ function renderResults(members, expenses) {
         <div class="results-amt ${net >= 0 ? "pos" : "neg"}">${net >= 0 ? "+" : ""}${formatInr(net)}</div>
       `;
       netList.appendChild(row);
+      waText += `- ${name}: ${net >= 0 ? "+" : ""}${formatInr(net)}\n`;
     });
 
   if (transfers.length === 0) {
@@ -115,9 +129,13 @@ function renderResults(members, expenses) {
     ok.className = "results-row";
     ok.innerHTML = `<div class="results-name">All settled</div><div class="results-sub">No transfers needed.</div><div class="results-amt pos">${formatInr(0)}</div>`;
     transferList.appendChild(ok);
+    waText += `\n*All settled!* No transfers needed. 💸`;
+    settlementTextForWA = waText;
+    if (waBtn) waBtn.style.display = "flex";
     return;
   }
 
+  waText += `\n*Minimal Transfers:*\n`;
   transfers.forEach((t) => {
     const row = document.createElement("div");
     row.className = "results-row";
@@ -127,7 +145,12 @@ function renderResults(members, expenses) {
       <div class="results-amt neg">${formatInr(t.amt)}</div>
     `;
     transferList.appendChild(row);
+    waText += `💰 ${t.from} → ${t.to}: ${formatInr(t.amt)}\n`;
   });
+  
+  waText += `\nSettle up via Splitvilla!`;
+  settlementTextForWA = waText;
+  if (waBtn) waBtn.style.display = "flex";
 }
 
 function switchTab(tab) {
@@ -149,6 +172,11 @@ function switchTab(tab) {
 
 function buildAnalytics() {
   try {
+    const navTiming = performance.getEntriesByType("navigation")[0];
+    if (navTiming && navTiming.type === "reload") {
+      localStorage.removeItem("splitvillaState");
+    }
+
     const raw = localStorage.getItem("splitvillaState");
     if (!raw) {
       showEmptyState();
